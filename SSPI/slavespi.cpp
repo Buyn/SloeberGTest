@@ -13,14 +13,13 @@ void SlaveSPI::spinit(void){
    // SPI1 is selected by default
    // MOSI, MISO, SCK and NSS PINs are set by the library
 #ifndef UNITTEST/*{{{*/
-   SPI.beginTransactionSlave(SPISettings(18000000, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT));
+   SPI.beginTransactionSlave(SPISettings(18000000, MSBFIRST, SPI_MODE0, DATA_SIZE_16BIT));
 #endif/*UNITTEST }}}*/
 	} //}}}
 
 /*   SlaveSPI::add_to_stak   * {{{ */
 void SlaveSPI::add_to_stak(void){
 #ifdef DEBUGMSG_EXECUTESTAK/*{{{*/
-	Serial.print(micros());
 	Serial.print(": command waiting: ");
 	Serial.println(commands_waiting);
 #endif/*}}}*/
@@ -50,28 +49,37 @@ void SlaveSPI::execute_command(void){
 #endif/*}}}*/
 	switch (msg) {/*{{{*/
 		case EXECUTE:/*{{{*/
+#ifdef DEBUGMSG_EXECUTESTAK/*{{{*/
 			Serial.println("Execute Last");
+#endif/*DEBUGMSG_EXECUTESTAK}}}*/
 			commands_waiting = 0;
 			back_msg = msg;
 			command_to_execute	= true;
 			break;/*}}}*/
 		case SC_GETMSGBYCOUNT:/*{{{*/
-			Serial.println("given back MSG");
+#ifdef DEBUGMSG_INFO /*{{{*/
+			Serial.println("given back MSG: ", msg_stak.count());
+#endif/*DEBUGMSG_INFO }}}*/
 			back_msg = msg_stak.pop();
 			msg_waiting = 1;
 			break;/*}}}*/
 		case SC_ISMSGWATING:/*{{{*/
-			Serial.println("Asket number of MSG: ");
+#ifdef DEBUGMSG_INFO /*{{{*/
+			Serial.println("Asket number of MSG: ", msg_stak.count());
+#endif/*DEBUGMSG_INFO }}}*/
 			back_msg = msg_stak.count();
 			break;/*}}}*/
 		case ENDOFFILE:/*{{{*/
+#ifdef DEBUGMSG_INFO /*{{{*/
 			Serial.println("ENDOFFILE");
+#endif/*DEBUGMSG_INFO }}}*/
 			commands_waiting = 0;
-			commands_waiting = 0;
-			back_msg = msg;
+			back_msg = msg_stak.count();
 			break;/*}}}*/
 		case ENDOFSESION:/*{{{*/
+#ifdef DEBUGMSG_INFO /*{{{*/
 			Serial.println("ENDOFSESION");
+#endif/*DEBUGMSG_INFO }}}*/
 			back_msg = msg;
 			spi_sesion = false;
 			commands_waiting = 0;
@@ -101,14 +109,19 @@ void SlaveSPI::sendFromStack(void){
 /*   SlaveSPI::addMSG   * {{{ */
 int SlaveSPI::addMSG(int name, unsigned int value){
 	msg_stak.push(name);
-	Serial.print(" :Pushing in MSG stack : ");
-	Serial.println(value);
+#ifdef DEBUGMSG_MSGSTASK/*{{{*/
+	//Serial.print(name);
+	Serial.println(name, " :Pushing in MSG stack : ", value);
+	Serial.println(" MSG in stack : ", msg_stak.count());
+	//Serial.println(value);
+#endif/*DEBUGMSG_MSGSTASK}}}*/
 	msg_stak.push(value);
 	return msg_stak.count();
 	} //}}}
 
 /*   SlaveSPI::isSesionEnd   * {{{ */
 bool SlaveSPI::isSesionEnd(void){
+	if (!spi_sesion) return true;
 	if (millis() >= sesionend){
 		back_msg = TIMEOUTSESION;	
 		spi_sesion = false;
@@ -208,11 +221,12 @@ void SlaveSPI::spirutine(void){
 		commands_waiting = 0;
 		msg_waiting = 0;
 		sesionend = millis() + SESIONTIMEOUT;
-		command_stak.reset();
-		Serial.print(micros());
-		Serial.print(": Connected: Start sesion");
-		Serial.println(millis());
-		Serial.println(sesionend);
+		//command_stak.reset();
+#ifdef DEBUGMSG_INFO /*{{{*/
+		//Serial.print(micros());
+		Serial.print(micros(),": Connected: Start sesion:", sesionend);
+		//Serial.println(sesionend);
+#endif/*DEBUGMSG_INFO }}}*/
 		return;
 		}/*}}}*/
 	else if (spi_sesion && msg_waiting != 0 && !isSesionEnd()) {/*{{{*/

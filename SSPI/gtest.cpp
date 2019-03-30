@@ -41,6 +41,7 @@ TEST(Spi, msg_stack_get_one) {/*{{{*/
 	SlaveSPI sspi(8);
 	sspi.setmsg(8);
 	sspi.testmsg(8);
+	EXPECT_EQ(sspi.staksize(), 0);
 	EXPECT_TRUE(sspi.spi_sesion)<<"turue if sesion starteted";
 	sspi.setmsg(SC_ISMSGWATING);
 	sspi.testmsg(SC_ISMSGWATING);
