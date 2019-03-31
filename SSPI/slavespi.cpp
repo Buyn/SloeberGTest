@@ -47,7 +47,7 @@ void SlaveSPI::execute_command(void){
 #ifdef DEBUGMSG_EXECUTESTAK/*{{{*/
 	Serial.println(": Command Exekution  ");
 #endif/*}}}*/
-	switch (msg) {/*{{{*/
+	switch (msg) {/* {{{*/
 		case EXECUTE:/*{{{*/
 #ifdef DEBUGMSG_EXECUTESTAK/*{{{*/
 			Serial.println("Execute Last");
@@ -58,14 +58,16 @@ void SlaveSPI::execute_command(void){
 			break;/*}}}*/
 		case SC_GETMSGBYCOUNT:/*{{{*/
 #ifdef DEBUGMSG_INFO /*{{{*/
-			Serial.println("given back MSG: ", msg_stak.count());
-#endif/*DEBUGMSG_INFO }}}*/
+			Serial.print("given back MSG: ");
+			Serial.println(msg_stak.count());
+#endif/*DEBUGMSG_INFO  }}}*/
 			back_msg = msg_stak.pop();
 			msg_waiting = 1;
 			break;/*}}}*/
 		case SC_ISMSGWATING:/*{{{*/
 #ifdef DEBUGMSG_INFO /*{{{*/
-			Serial.println("Asket number of MSG: ", msg_stak.count());
+			Serial.print("Asket number of MSG: ");
+			Serial.println(msg_stak.count());
 #endif/*DEBUGMSG_INFO }}}*/
 			back_msg = msg_stak.count();
 			break;/*}}}*/
@@ -110,10 +112,11 @@ void SlaveSPI::sendFromStack(void){
 int SlaveSPI::addMSG(int name, unsigned int value){
 	msg_stak.push(name);
 #ifdef DEBUGMSG_MSGSTASK/*{{{*/
-	//Serial.print(name);
-	Serial.println(name, " :Pushing in MSG stack : ", value);
-	Serial.println(" MSG in stack : ", msg_stak.count());
-	//Serial.println(value);
+	Serial.print(name);
+	Serial.print(" :Pushing in MSG stack : ");
+	Serial.println(value);
+	Serial.print(" MSG in stack : ");
+	Serial.println( msg_stak.count());
 #endif/*DEBUGMSG_MSGSTASK}}}*/
 	msg_stak.push(value);
 	return msg_stak.count();
@@ -170,42 +173,60 @@ void SlaveSPI::setmsg(int newmsg){
 	back_msg = newmsg;
 	} //}}}
 
+/*   SlaveSPI::setSPIbackmsg   * {{{ */
+void SlaveSPI::setSPIbackmsg(spi_dev * spi_d){
+#ifndef UNITTEST/*{{{*/
+	while (spi_is_busy(spi_d)); // "... and then wait until BSY=0 before disabling the SPI."
+	spi_tx_reg(spi_d, back_msg); // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
+#endif/*UNITTEST }}}*/
+	} //}}}
+
 /*   SlaveSPI::testmsg   * {{{ */
+#ifdef UNITTEST/*{{{*/
 void SlaveSPI::testmsg(int newmsg){
 	msg = newmsg;
-	spirutine();
+	spirutine( (spi_dev *) & newmsg);
 	//spi_sesion = true;
 	} //}}}
+#endif /*UNITTEST}}}*/
 
 /*   SlaveSPI::runtime   * {{{ */
 bool SlaveSPI::runtime(void){
 #ifndef UNITTEST/*{{{*/
-	if ( spi_is_rx_nonempty(SPI.dev()) && !spi_is_busy(SPI.dev())) { /*{{{*/
-		spirutine();
+   //spi_dev * spi_d = SPI.dev();
+   spi_d = SPI.dev();
+	if ( spi_is_tx_empty(spi_d) && !spi_is_busy(spi_d)) { /*{{{*/
+		setSPIbackmsg(spi_d);
+		}/*}}}*/
+	if ( spi_is_rx_nonempty(spi_d) && !spi_is_busy(spi_d)) { /*{{{*/
+		spirutine(spi_d);
 		}/*}}}*/
 #endif/*UNITTEST }}}*/
 	return command_to_execute;
 	} //}}}
 
 /*   SlaveSPI::readyTransfer   * {{{ */
-UINT SlaveSPI::readyTransfer(UINT response){
+UINT SlaveSPI::readyTransfer(spi_dev * spi_d){
 #ifndef UNITTEST/*{{{*/
-   spi_dev * spi_d = SPI.dev();
-	if ( spi_is_tx_empty(spi_d) && !spi_is_busy(spi_d)) { 
-		spi_tx_reg(spi_d, response); // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
-	}else{
-		Serial.println("tx reg not empty");}
-   while (spi_is_busy(spi_d)); // "... and then wait until BSY=0 before disabling the SPI."
+   //spi_dev * spi_d = SPI.dev();
+	if ( spi_is_tx_empty(spi_d)) { 
+		while (spi_is_busy(spi_d)); // "... and then wait until BSY=0 before disabling the SPI."
+#ifdef DEBUGMSG_INFO/*{{{*/
+		Serial.print("spi tx wose empty");
+#endif /*DEBUGMSG_INFO}}}*/
+		spi_tx_reg(spi_d, back_msg); // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
+		}
+	while (spi_is_busy(spi_d)); // "... and then wait until BSY=0 before disabling the SPI."
 	return (UINT)spi_rx_reg(spi_d);
 #endif/*UNITTEST }}}*/
 #ifdef UNITTEST/*{{{*/
-	return response;
+	return back_msg;
 #endif/*UNITTEST }}}*/
 	} //}}}
 
 /*   SlaveSPI::spirutine   *  {{{ */
-void SlaveSPI::spirutine(void){
-	msg = readyTransfer(back_msg);
+void SlaveSPI::spirutine(spi_dev * spi_d){
+	msg = readyTransfer(spi_d);
 	isSesionEnd();
 #ifdef DEBUGMSG_RECIVSEND/*{{{*/
 	Serial.print("Recived = 0x");
@@ -224,7 +245,7 @@ void SlaveSPI::spirutine(void){
 		//command_stak.reset();
 #ifdef DEBUGMSG_INFO /*{{{*/
 		//Serial.print(micros());
-		Serial.print(micros(),": Connected: Start sesion:", sesionend);
+		Serial.println("Connected: Start sesion");
 		//Serial.println(sesionend);
 #endif/*DEBUGMSG_INFO }}}*/
 		return;

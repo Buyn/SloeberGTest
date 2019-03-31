@@ -4,7 +4,6 @@
 #include "Stack.h"
 #include "slavespi.h"
 
-
 TEST(Spi, startSessio) {/*{{{*/
 	SlaveSPI sspi(8);
 	EXPECT_FALSE(sspi.spi_sesion)<<"false form start";
