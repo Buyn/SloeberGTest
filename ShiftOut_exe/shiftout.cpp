@@ -6,9 +6,11 @@ ShiftOut::ShiftOut(void) {
 
 /*   ShiftOut::initpins   * {{{ */
 void ShiftOut::initpins(void){
-   pinMode(latchPin, OUTPUT);
-   pinMode(clockPin, OUTPUT);
-   pinMode(dataPin, OUTPUT);
+   pinMode(LATCHPIN, OUTPUT);
+
+   pinMode(CLOCKPIN, OUTPUT);
+
+   pinMode(DATAPIN , OUTPUT);
 	} //}}}
 
 /*   ShiftOut::send16   * {{{ */
@@ -25,14 +27,14 @@ bool ShiftOut::send16(BYTES_VAL_T value){
 #endif /* UNITTEST }}}*/
 	#ifndef UNITTEST/*{{{*/
 	// устанавливаем синхронизацию "защелки" на LOW
-	digitalWrite(latchPin, LOW);
+	digitalWrite(LATCHPIN, LOW);
 	for ( int i=0 ; i < 16 ; i++ ) {/*{{{*/
-		digitalWrite( ulDataPin, !!(value & (1 << i)) ) ;
-		digitalWrite( ulClockPin, HIGH ) ;
-		digitalWrite( ulClockPin, LOW ) ;		
+		digitalWrite( DATAPIN, !!(value & (1 << i)) ) ;
+		digitalWrite( CLOCKPIN, HIGH ) ;
+		digitalWrite( CLOCKPIN, LOW ) ;		
 		}/*}}}*/
 	//"защелкиваем" регистр, тем самым устанавливая значения на выходах
-	digitalWrite(latchPin, HIGH);
+	digitalWrite(LATCHPIN, HIGH);
 	oldPinValues = value;
 	return true;
 	#endif /* UNITTEST }}}*/

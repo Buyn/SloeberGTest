@@ -40,11 +40,11 @@
 #define PULSE_WIDTH_USEC   1
 #define BYTES_VAL_T unsigned int
 //Пин подключен к ST_CP входу 74HC595
-#define		 	latchPin  	PA2  
+#define		 	LATCHPIN  	PA2  
 //Пин подключен к SH_CP входу 74HC595
-#define 			clockPin  	PA3
+#define 			CLOCKPIN  	PA3
 //Пин подключен к DS входу 74HC595
-#define 			dataPin  	PA1
+#define 			DATAPIN  	PA1
 /*}}}*/
 // Variable block{{{
 /*}}}*/
