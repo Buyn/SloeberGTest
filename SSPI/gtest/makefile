@@ -52,39 +52,39 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 AR += \
-D:\Development\Ardunio\Eclipse\Home\sloeber-workspace\ShiftOut\gtest\arduino.ar \
+D:\Development\Ardunio\Eclipse\Home\sloeber-workspace\SSPI\gtest\arduino.ar \
 
 ELF += \
-ShiftOut.elf \
+SSPI.elf \
 
 HEX += \
-ShiftOut.hex \
+SSPI.hex \
 
 
 # All Target
-all: ShiftOut
+all: SSPI
 
 # Tool invocations
-ShiftOut: $(HEX)
+SSPI: $(HEX)
 	@echo 'Building target: $@'
 	@echo 'Printing size:'
 	${JANTJE.SIZE.SWITCH}
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-D:\Development\Ardunio\Eclipse\Home\sloeber-workspace\ShiftOut\gtest\arduino.ar: $(AR_OBJ)
+D:\Development\Ardunio\Eclipse\Home\sloeber-workspace\SSPI\gtest\arduino.ar: $(AR_OBJ)
 	@echo 'Starting archiver'
-	"D:\sloeber\arduinoPlugin\packages\Jantje\tools\MinGW\5.3.0/bin/ar" rcs     D:/Development/Ardunio/Eclipse/Home/sloeber-workspace/ShiftOut/gtest/arduino.ar $(AR_OBJ)
+	"D:\sloeber\arduinoPlugin\packages\Jantje\tools\MinGW\5.3.0/bin/ar" rcs     D:/Development/Ardunio/Eclipse/Home/sloeber-workspace/SSPI/gtest/arduino.ar $(AR_OBJ)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-ShiftOut.elf: $(LINK_OBJ) $(AR)
+SSPI.elf: $(LINK_OBJ) $(AR)
 	@echo 'Starting combiner'
-	"D:\sloeber\arduinoPlugin\packages\Jantje\tools\MinGW\5.3.0/bin/g++" -w -Os  -Wl,--gc-sections  -o "D:/Development/Ardunio/Eclipse/Home/sloeber-workspace/ShiftOut/gtest/ShiftOut.exe"   $(LINK_OBJ)   D:/Development/Ardunio/Eclipse/Home/sloeber-workspace/ShiftOut/gtest/arduino.ar  "-LD:/Development/Ardunio/Eclipse/Home/sloeber-workspace/ShiftOut/gtest" -lm
+	"D:\sloeber\arduinoPlugin\packages\Jantje\tools\MinGW\5.3.0/bin/g++" -w -Os  -Wl,--gc-sections  -o "D:/Development/Ardunio/Eclipse/Home/sloeber-workspace/SSPI/gtest/SSPI.exe"   $(LINK_OBJ)   D:/Development/Ardunio/Eclipse/Home/sloeber-workspace/SSPI/gtest/arduino.ar  "-LD:/Development/Ardunio/Eclipse/Home/sloeber-workspace/SSPI/gtest" -lm
 	@echo 'Finished building: $@'
 	@echo ' '
 
-ShiftOut.hex: $(ELF)
+SSPI.hex: $(ELF)
 	@echo 'Do all objcopy commands'
 	${JANTJE.OBJCOPY}
 	@echo 'Finished building: $@'

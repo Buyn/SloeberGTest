@@ -1,9 +1,10 @@
 #ifdef UNITTEST
 #include "gtest.h"
-#include "blink.h"
+#include "stepmotor.h"
+//#include "blink.h"
 
 
-TEST(SlaveSPI, encryption)
+TEST(stepmotor, init)
 {
 	int x= 1;
 	EXPECT_EQ(x,1);
