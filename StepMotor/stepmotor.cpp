@@ -2,74 +2,61 @@
 
 /*   StepMotor::StepMotor   * {{{ */
 StepMotor::StepMotor(int _pin) {
-	pin = _pin;
-	to_value = 0;
-	value = 0;
-	fade_speed = 10;
-	update_time = millis() + fade_speed;
+	pin 			= _pin;
+	value 		= 0;
+	timeout	 	= 10;
+	update_time = millis() + timeout;
 	pinMode(pin, OUTPUT);
 	} //}}}
 /*   StepMotor::StepMotor   * {{{ */
 StepMotor::StepMotor() {
 	pin = 0;
-	to_value = 0;
 	value = 0;
-	fade_speed = 10;
-	update_time = millis() + fade_speed;
+	timeout = 10;
+	update_time = millis() + timeout;
 	} //}}}
 
 /*   StepMotor::set_speed   * {{{ */
 void StepMotor::set_speed(int new_speed){
-	fade_speed = new_speed;
+	timeout = new_speed;
+	} //}}}
+/*   StepMotor::move   * {{{ */
+void StepMotor::move(int new_value){
+	value += new_value;
 	} //}}}
 
-/*   StepMotor::fade_to   * {{{ */
-void StepMotor::fade_to(int new_value){
-	to_value = new_value;
-	} //}}}
-
-/*   StepMotor::set_to   * {{{ */
-void StepMotor::set_to(int new_value){
-	to_value = new_value;
-	value = new_value;
-	set_on();
-	} //}}}
-
-/*   StepMotor::set_on   * {{{ */
-void StepMotor::set_on(void){
-	analogWrite(pin, to_value);
+/*   StepMotor::set_enable   * {{{ */
+void StepMotor::set_enable(int new_value){
+	if (new_value == 0) {
+		enable = false;
+	}else{	
+		enable = true;
+		}
 	} //}}}
 
 /*   StepMotor::update   * {{{ */
 void StepMotor::update(void){
-	if ( value > to_value) fade_Down();
-	if ( value < to_value) fade_Up();
+	if ( value != 0) step();
 	} //}}}
 
 /*   StepMotor::runtime   * {{{ */
 void StepMotor::runtime(void){
 	if (millis() < update_time) return;
-	if ( value != to_value ) update();
-	update_time = millis() + fade_speed;
+	if ( value != 0 ) update();
+	update_time = millis() + timeout;
 	} //}}}
 /*   StepMotor::done   * {{{ */
 bool StepMotor::done(void){
-	if ( value == to_value ) return true;
+	if ( value == 0 ) return true;
 	else return false;
 	} //}}}
 
-/*   StepMotor::fade_Up   * {{{ */
-void StepMotor::fade_Up(void){
-	if ( value == StepMotor_MAX_VALUE) return;
-	analogWrite(pin, value++);
-	//value++;
-	} //}}}
-
-/*   StepMotor::fade_Down   * {{{ */
-void StepMotor::fade_Down(void){
+/*   StepMotor::step   * {{{ */
+void StepMotor::step(void){
 	if ( value == 0) return;
-	analogWrite(pin, value--);
-	//to_value--;
+	analogWrite(pin, HIGH);
+	value--;
+	analogWrite(pin, LOW);
 	} //}}}
 
 /*   StepMotor::on   * {{{ */
@@ -79,17 +66,6 @@ void StepMotor::on(void) {
 /*   StepMotor::off   * {{{ */
 void StepMotor::off(void) {
 	digitalWrite(pin, LOW);
-	} //}}}
-/*   StepMotor::trige   {{{ */
-void StepMotor::trige(void) {
-	if (value == 0) {
-		on();
-		value = 1;
-		}
-	else{
-		off();
-		value = 0;
-		}
 	} //}}}
 
 

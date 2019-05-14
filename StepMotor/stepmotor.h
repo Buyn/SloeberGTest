@@ -23,24 +23,26 @@ class StepMotor {
  public: // {{{
 	StepMotor(int );
 	StepMotor();
+	void move(int);
 	void set_speed(int);
-	void fade_to(int);
-	void set_to(int);
+	void set_enable(int);
+	void set_steps(void );
 	void update(void );
 	void runtime(void );
 	bool done(void);
 	void on(void );
 	void off(void );
-	void trige(void );
+	/*}}}*/
+	/* private: * {{{*/
+#ifndef UNITTEST/*{{{*/
+ private:
+#endif /* UNITTEST }}}*/
 	unsigned long update_time;
 	int pin;
-	/*}}}*/
- private:/*{{{*/
-	unsigned int value, to_value;
-	unsigned long fade_speed;
-	void fade_Up(void); 
-	void fade_Down(void); 
-	void set_on(void); 
+	bool enable;
+	unsigned int value;
+	unsigned long timeout;
+	void step(void);
 	/*}}}*/
  };
  /*}}}*/

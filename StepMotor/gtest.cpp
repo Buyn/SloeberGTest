@@ -1,41 +1,33 @@
 #ifdef UNITTEST
 #include "gtest.h"
 #include "stepmotor.h"
-//#include "blink.h"
 
 
-TEST(stepmotor, init)
-{
-	int x= 1;
-	EXPECT_EQ(x,1);
-}
+TEST(stepmotor, init) {
+	StepMotor sm = StepMotor(2);
+	EXPECT_EQ(sm.pin,2);
+	EXPECT_EQ(sm.value,0);
+	}
 
-TEST(gps, convertDegreesToDeci)
-{
-//	GPSLocation in0 =
-//			{ 51031580, 3421810 };
-//	GPSLocation out0 =
-//			{ 51052633, 3703016 }; 
+TEST(stepmotor, Step) {
+	StepMotor sm = StepMotor(2);
+	sm.move(100);
+	EXPECT_EQ(sm.value,100);
+	sm.step();
+	EXPECT_EQ(sm.value,99);
+	sm.step();
+	EXPECT_EQ(sm.value,98);
+	sm.move(100);
+	EXPECT_EQ(sm.value,198);
+	}
 
-//
-//	in0.convertDegreesToDeci();
-//	EXPECT_EQ(out0.myLatitude, in0.myLatitude);
-//	EXPECT_EQ(out0.myLongitude, in0.myLongitude);
-}
-
-TEST(gps, distance)
-{
-//	GPSLocation dist1_1 ={ 51057580, 3699610 };
-//	GPSLocation dist1_2 ={ 51054420, 3704980 };
-//	long dist1 = 51406; //in cm 51410; //in cm
-
-//	EXPECT_EQ(0, dist1_1.distance(dist1_1));
-//	EXPECT_EQ(0, dist1_2.distance(dist1_2));
-//	EXPECT_EQ(dist1, dist1_2.distance(dist1_1));
+TEST(stepmotor, runtime) {
 //	EXPECT_EQ(dist1, dist1_1.distance(dist1_2));
+	}
 
-}
-
+TEST(stepmotor, setspeed) {
+//	EXPECT_EQ(dist1, dist1_1.distance(dist1_2));
+	}
 
 
 #endif
