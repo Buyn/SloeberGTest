@@ -21,8 +21,17 @@ void StepMotor::set_speed(int new_speed){
 	timeout = new_speed;
 	} //}}}
 /*   StepMotor::move   * {{{ */
-void StepMotor::move(int new_value){
+void StepMotor::move(long new_value){
 	value += new_value;
+	} //}}}
+
+/*   StepMotor::stop   * {{{ */
+void StepMotor::stop(long new_value){
+	value = new_value;
+	} //}}}
+/*   StepMotor::stop   * {{{ */
+void StepMotor::stop(void){
+	value = 0;
 	} //}}}
 
 /*   StepMotor::set_enable   * {{{ */
@@ -39,10 +48,15 @@ void StepMotor::update(void){
 	if ( value != 0) step();
 	} //}}}
 
+/*   StepMotor::resetimer   * {{{ */
+void StepMotor::resetimer(void){
+	update_time = millis() + timeout;
+	} //}}}
+
 /*   StepMotor::runtime   * {{{ */
 void StepMotor::runtime(void){
 	if (millis() < update_time) return;
-	if ( value != 0 ) update();
+	step();
 	update_time = millis() + timeout;
 	} //}}}
 /*   StepMotor::done   * {{{ */

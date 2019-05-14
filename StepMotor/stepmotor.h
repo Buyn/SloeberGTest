@@ -23,10 +23,12 @@ class StepMotor {
  public: // {{{
 	StepMotor(int );
 	StepMotor();
-	void move(int);
+	void move(long);
 	void set_speed(int);
 	void set_enable(int);
-	void set_steps(void );
+	void resetimer(void);
+	void stop(void);
+	void stop(long);
 	void update(void );
 	void runtime(void );
 	bool done(void);
@@ -37,10 +39,9 @@ class StepMotor {
 #ifndef UNITTEST/*{{{*/
  private:
 #endif /* UNITTEST }}}*/
-	unsigned long update_time;
+	unsigned long update_time, value;
 	int pin;
 	bool enable;
-	unsigned int value;
 	unsigned long timeout;
 	void step(void);
 	/*}}}*/
