@@ -16,7 +16,6 @@
 #endif
 /*}}}*/
 //define bloc  {{{
-#define StepMotor_MAX_VALUE 255
 /*}}}*/
 // encounter calss{{{
 class StepMotor {
