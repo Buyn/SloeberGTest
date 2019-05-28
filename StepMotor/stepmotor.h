@@ -42,7 +42,7 @@ class StepMotor {
 #endif /* UNITTEST }}}*/
 	unsigned long update_time, value, steps_from_last;
 	int pin;
-	bool enable;
+	bool enable, checked;
 	unsigned long timeout;
 	void step(void);
 	/*}}}*/

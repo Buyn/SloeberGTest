@@ -25,6 +25,7 @@ void StepMotor::set_speed(int new_speed){
 /*   StepMotor::move   * {{{ */
 void StepMotor::move(long new_value){
 	value += new_value;
+	checked = false;
 	} //}}}
 
 /*   StepMotor::stop   * {{{ */
@@ -63,7 +64,10 @@ void StepMotor::runtime(void){
 	} //}}}
 /*   StepMotor::done   * {{{ */
 bool StepMotor::done(void){
-	if ( value == 0 ) return true;
+	if ( value == 0 && !checked) {
+		checked = true;
+		return true;
+		}
 	else return false;
 	} //}}}
 
