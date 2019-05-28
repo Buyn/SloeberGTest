@@ -16,6 +16,8 @@
 #endif
 /*}}}*/
 //define bloc  {{{
+#define DEBAG_STEP_LONGS 10
+#define START_TIME_OUT 1000
 /*}}}*/
 // encounter calss{{{
 class StepMotor {
@@ -38,7 +40,7 @@ class StepMotor {
 #ifndef UNITTEST/*{{{*/
  private:
 #endif /* UNITTEST }}}*/
-	unsigned long update_time, value;
+	unsigned long update_time, value, steps_from_last;
 	int pin;
 	bool enable;
 	unsigned long timeout;

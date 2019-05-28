@@ -3692,3 +3692,12 @@ This warning can be switched off on the Team > Git > Confirmations and Warnings 
 
 !ENTRY com.wakatime.eclipse.plugin 1 0 2019-05-28 01:06:36.213
 !MESSAGE wakatime-cli is up to date.
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-05-28 01:14:03.718
+!MESSAGE Enablement expression is missing for descriptor type org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-05-28 01:14:03.721
+!MESSAGE Enablement expression is missing for config provider for org.eclipse.cdt.debug.core.coreBuildDescriptorType
+
+!ENTRY org.eclipse.launchbar.core 2 0 2019-05-28 01:14:03.721
+!MESSAGE Enablement expression is missing for config provider for org.eclipse.cdt.debug.core.coreBuildDescriptorType
