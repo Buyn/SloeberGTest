@@ -1,0 +1,5 @@
+
+#undef DEBAG_STEP_LONGS 
+#define DEBAG_STEP_LONGS 2000
+#undef START_TIME_OUT 
+#define START_TIME_OUT 2000

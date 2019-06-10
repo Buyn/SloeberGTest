@@ -10,19 +10,21 @@
 #include "Arduino.h"
 #include "ToWaveStepMotor.h"
 #include "defcfg.h"
-/*{{{*/
-#define INTERVAL 500 //The blinking interval
+/*Define block{{{*/
+#define STEP_TIMEOUT		500
+#define STEP_LONGS		500
+#define SERIES_TIMEOUT		10000
+#define SERIES_PULSES		500
+#define STEP_PIN		A0
+#define LED_BUILTIN 	13
 /*}}}*/
-/*Varibls block{{{*/
-
-/*}}}*/
-//void test_setup(void);
-//void test_loop(void);
 class Blink {//{{{
  public: // {{{
 	void test_setup(void);
 	void test_loop(void);
-	int itest;
+	/*Varibls block{{{*/
+	ToWaveStepMotor sm = ToWaveStepMotor(STEP_PIN);
+	/*}}}*/
 	/*}}}*/
 	/* private: * {{{*/
 #ifndef UNITTEST/*{{{*/
